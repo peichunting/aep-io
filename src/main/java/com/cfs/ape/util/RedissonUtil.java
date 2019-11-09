@@ -1,6 +1,7 @@
 package com.cfs.ape.util;
 
 import org.redisson.Redisson;
+import org.redisson.api.RPriorityBlockingQueue;
 import org.redisson.api.RPriorityQueue;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
@@ -33,7 +34,7 @@ public class RedissonUtil {
 
         RedissonClient redissonClient = Redisson.create(config);
 
-        RPriorityQueue<String> priorityQueue = redissonClient.getPriorityBlockingQueue(queueName);
+        RPriorityQueue<String> priorityQueue = redissonClient.getPriorityQueue(queueName);
 
         priorityQueue.trySetComparator(new Comparator<String>() {
             @Override

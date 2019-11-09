@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.cfs.ape.entity.AepCommand;
 import com.cfs.ape.service.support.AepCommandSupport;
 import com.cfs.ape.util.RedissonUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.redisson.Redisson;
 import org.redisson.api.RPriorityBlockingQueue;
 import org.redisson.api.RPriorityQueue;
@@ -40,16 +41,27 @@ public class ApplicationInit implements ApplicationRunner {
         executor.submit(new Runnable() {
             @Override
             public void run() {
+
                 while(ApplicationConstant.CONSUMME){
+
                     RedissonClient client = Redisson.create(config);
-                    RPriorityBlockingQueue<String> priorityQueue = client.getPriorityBlockingQueue(ApplicationConstant.COMMAND_PREPARE_HANDLE_QUEUE);
+                    RPriorityQueue<String> priorityQueue = client.getPriorityQueue(ApplicationConstant.COMMAND_PREPARE_HANDLE_QUEUE);
                     try {
-                        String command = priorityQueue.take();
+
+
+                        String command = priorityQueue.poll();
+                        if(StringUtils.isBlank(command)){
+                            continue;
+                        }
+
+
                         JSONObject commandJson = JSON.parseObject(command);
                         AepCommand aepCommand = JSON.toJavaObject(commandJson, AepCommand.class);
                         aepCommandSupport.mockDeviceCommandCreate(aepCommand);
-                    } catch (InterruptedException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
+                    }finally{
+                        client.shutdown();
                     }
 
                 }
