@@ -8,9 +8,13 @@ import com.ctg.ag.sdk.biz.AepDataClient;
 import com.ctg.ag.sdk.biz.AepDeviceCommandClient;
 import com.ctg.ag.sdk.biz.aep_command.TupCommandRequest;
 import com.ctg.ag.sdk.biz.aep_device_command.CreateCommandRequest;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import javax.activation.CommandMap;
+import javax.annotation.Resource;
 
 @Service
 public class CommandServiceImpl implements CommandService {
@@ -24,20 +28,19 @@ public class CommandServiceImpl implements CommandService {
     @Value("${aep.app.secret}")
     private String appSecret;
 
+    @Autowired
+    private RedissonClient redissonClient;
+
 
     @Override
-    public void createCommand(AepCommand command) {
-        AepDeviceCommandClient client = AepDeviceCommandClient.newClient().appKey(appKey).appSecret(appSecret).build();
+    public AepCommand saveCommand(AepCommand aepCommand){
+        commandMapper.insert(aepCommand);
+        return aepCommand;
+    }
 
-        CreateCommandRequest request = new CreateCommandRequest();
-
-        request.setBody();
-        // request.setParam..  	// set your request params here
-        try {
-            System.out.println(client.CreateCommand(request));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+    @Override
+    public AepCommand updateCommand(AepCommand command) {
+        commandMapper.updateById(command);
+        return command;
     }
 }

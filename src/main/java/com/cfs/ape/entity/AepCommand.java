@@ -1,15 +1,19 @@
 package com.cfs.ape.entity;
 
 
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+import com.cfs.ape.enums.CommandStatusEnum;
 
 import java.time.LocalDateTime;
+
+import static com.baomidou.mybatisplus.annotation.IdType.ID_WORKER;
 
 
 @TableName("cfs_aep_command")
 public class AepCommand {
 
-    private long id;
+    @TableId(type= ID_WORKER)
+    private Long id;
 
     private String deviceId;
 
@@ -19,13 +23,15 @@ public class AepCommand {
 
     private String operator;
 
+    private String content;
+
     private int ttl;
 
     private int level;
 
     private String masterKey;
 
-    private String commandStatus;
+    private CommandStatusEnum commandStatus;
 
     private long commandId;
 
@@ -35,15 +41,17 @@ public class AepCommand {
 
     private String msg;
 
+    @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
+    @TableField(fill = FieldFill.UPDATE)
     private LocalDateTime updateTime;
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -103,11 +111,11 @@ public class AepCommand {
         this.masterKey = masterKey;
     }
 
-    public String getCommandStatus() {
+    public CommandStatusEnum getCommandStatus() {
         return commandStatus;
     }
 
-    public void setCommandStatus(String commandStatus) {
+    public void setCommandStatus(CommandStatusEnum commandStatus) {
         this.commandStatus = commandStatus;
     }
 
@@ -147,6 +155,8 @@ public class AepCommand {
         return createTime;
     }
 
+
+
     public void setCreateTime(LocalDateTime createTime) {
         this.createTime = createTime;
     }
@@ -157,5 +167,13 @@ public class AepCommand {
 
     public void setUpdateTime(LocalDateTime updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 }

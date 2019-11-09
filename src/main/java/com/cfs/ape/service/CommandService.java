@@ -4,5 +4,8 @@ import com.cfs.ape.entity.AepCommand;
 
 public interface CommandService {
 
-    void createCommand(AepCommand command);
+
+    AepCommand saveCommand(AepCommand command);
+
+    AepCommand updateCommand(AepCommand command);
 }
