@@ -50,12 +50,12 @@ public class ApplicationInit implements ApplicationRunner {
                 while (ApplicationConstant.CONSUMME) {
                     //RedissonClient client = Redisson.create(config);
                     RPriorityBlockingQueue<String> priorityQueue = redissonClient.getPriorityBlockingQueue(ApplicationConstant.COMMAND_PREPARE_HANDLE_QUEUE);
-                    priorityQueue.trySetComparator(new Comparator<String>() {
-                        @Override
-                        public int compare(String o1, String o2) {
-                            return o1.compareTo(o2);
-                        }
-                    });
+//                    priorityQueue.trySetComparator(new Comparator<String>() {
+//                        @Override
+//                        public int compare(String o1, String o2) {
+//                            return o1.compareTo(o2);
+//                        }
+//                    });
                     //priorityQueue.addListener()
                     //priorityQueue.touchAsync()
                     //priorityQueue.moveAsync(0);
@@ -76,7 +76,7 @@ public class ApplicationInit implements ApplicationRunner {
                     } catch (Exception e) {
                         e.printStackTrace();
                     } finally {
-                        //redissonClient.shutdown();
+                        redissonClient.shutdown();
                     }
 
                 }

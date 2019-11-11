@@ -32,23 +32,21 @@ public class RedissonUtil {
         return priorityQueue;
     }
 
+
+
     public boolean pushToPriorityQueue(String queueName,String value){
 
-        //RedissonClient redissonClient = Redisson.create(config);
+        RedissonClient redissonClient = Redisson.create(config);
 
         RPriorityBlockingQueue<String> priorityQueue = redissonClient.getPriorityBlockingQueue(queueName);
 
-        priorityQueue.trySetComparator(new Comparator<String>() {
-            @Override
-            public int compare(String o1, String o2) {
-                return o1.compareTo(o2);
-            }
-        });
+        priorityQueue.trySetComparator(new MyComparator());
         try {
+
 
             return priorityQueue.add(value);
         }finally {
-            //redissonClient.shutdown();
+            redissonClient.shutdown();
         }
     }
 }

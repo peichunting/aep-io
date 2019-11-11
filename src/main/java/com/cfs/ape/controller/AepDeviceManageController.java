@@ -1,9 +1,7 @@
 package com.cfs.ape.controller;
 
 import com.cfs.ape.entity.AepCreateDevice;
-import com.cfs.ape.service.CreateDeviceService;
 import com.cfs.ape.service.DeviceHandleService;
-import com.cfs.ape.service.support.AepCreateDeviceSupport;
 import com.cfs.ape.util.ResponseResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
