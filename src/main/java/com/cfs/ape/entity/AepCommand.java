@@ -41,6 +41,8 @@ public class AepCommand {
 
     private String msg;
 
+    private int priority;
+
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
@@ -175,5 +177,13 @@ public class AepCommand {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public int getPriority() {
+        return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
     }
 }

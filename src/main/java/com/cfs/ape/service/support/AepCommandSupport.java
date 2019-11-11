@@ -38,7 +38,7 @@ public class AepCommandSupport {
         return commandService.updateCommand(aepCommand);
     }
 
-    public AepCommand deviceCommandCreate(AepCommand aepCommand) throws Exception {
+    public AepCommand deviceCommandCreate(AepCommand aepCommand){
         aepCommand.setCommandStatus(CommandStatusEnum.PROCESSING);
         String commandRequestStr = JSON.toJSONString(aepCommand);
         logger.info("command {} begin process",commandRequestStr);
@@ -64,25 +64,26 @@ public class AepCommandSupport {
 
             if (200 != code) {
                 aepCommand.setCommandStatus(CommandStatusEnum.FAILURE);
-            }
-            String content = response.getBody().toString();
+            }else {
+                String content = new String(response.getBody());
 
-            if(StringUtils.isNotBlank(content)) {
+                if (StringUtils.isNotBlank(content)) {
 
-                JSONObject jsonContent = JSON.parseObject(content);
-                String resultCode = jsonContent.getString("code");
-                JSONObject result = jsonContent.getJSONObject("result");
-                aepCommand.setCode(Integer.valueOf(resultCode));
-                if("200".equals(resultCode)) {
-                    String commandId = result.getString("commandId");
-                    aepCommand.setCommandId(Long.valueOf(commandId));
-                    aepCommand.setCommandStatus(CommandStatusEnum.SUCCESS);
-                }else{
+                    JSONObject jsonContent = JSON.parseObject(content);
+                    String resultCode = jsonContent.getString("code");
+                    JSONObject result = jsonContent.getJSONObject("result");
+                    aepCommand.setCode(Integer.valueOf(resultCode));
+                    if ("200".equals(resultCode)) {
+                        String commandId = result.getString("commandId");
+                        aepCommand.setCommandId(Long.valueOf(commandId));
+                        aepCommand.setCommandStatus(CommandStatusEnum.SUCCESS);
+                    } else {
+                        aepCommand.setCommandStatus(CommandStatusEnum.FAILURE);
+                    }
+
+                } else {
                     aepCommand.setCommandStatus(CommandStatusEnum.FAILURE);
                 }
-
-            }else{
-                aepCommand.setCommandStatus(CommandStatusEnum.FAILURE);
             }
 
         }catch (Exception e){

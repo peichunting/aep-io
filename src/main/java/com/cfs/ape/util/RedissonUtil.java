@@ -19,6 +19,8 @@ public class RedissonUtil {
     @Autowired
     private Config config;
 
+    public static RPriorityQueue<String> comandQueue = null;
+
     public RPriorityQueue<String> createPriorityQueue(String queueName){
         RPriorityQueue<String> priorityQueue = redissonClient.getPriorityQueue(queueName);
         priorityQueue.trySetComparator(new Comparator<String>() {
@@ -32,9 +34,9 @@ public class RedissonUtil {
 
     public boolean pushToPriorityQueue(String queueName,String value){
 
-        RedissonClient redissonClient = Redisson.create(config);
+        //RedissonClient redissonClient = Redisson.create(config);
 
-        RPriorityQueue<String> priorityQueue = redissonClient.getPriorityQueue(queueName);
+        RPriorityBlockingQueue<String> priorityQueue = redissonClient.getPriorityBlockingQueue(queueName);
 
         priorityQueue.trySetComparator(new Comparator<String>() {
             @Override
@@ -43,9 +45,10 @@ public class RedissonUtil {
             }
         });
         try {
+
             return priorityQueue.add(value);
         }finally {
-            redissonClient.shutdown();
+            //redissonClient.shutdown();
         }
     }
 }
