@@ -18,6 +18,11 @@ public class AepDeviceManageController {
     private DeviceHandleService deviceHandleService;
 
 
+    /**
+     * 设备注册接口
+     * @param aepCreateDevice
+     * @return
+     */
     @RequestMapping("/createDevice")
     public ResponseEntity<ResponseResult> createDevice(@RequestBody AepCreateDevice aepCreateDevice){
         aepCreateDevice = deviceHandleService.handleCreateDevice(aepCreateDevice);

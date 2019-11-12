@@ -17,6 +17,11 @@ public class AepSystemController {
     @Autowired
     private CommandInfoService commandInfoService;
 
+    /**
+     *
+     * @param aepCommandInfo
+     * @return
+     */
     @PostMapping("/updateCommandInfo")
     public ResponseEntity<ResponseResult> updateCommandInfo(@RequestBody AepCommandInfo aepCommandInfo){
         aepCommandInfo = commandInfoService.updateAepCommandInfo(aepCommandInfo);

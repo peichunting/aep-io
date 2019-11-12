@@ -28,6 +28,11 @@ public class ApeCommandController {
     @Autowired
     private CommandHandleService commandHandleService;
 
+    /**
+     * 指令下发接口
+     * @param command
+     * @return
+     */
     @RequestMapping("/command")
     public ResponseEntity<ResponseResult> comand(@RequestBody AepCommand command) {
 

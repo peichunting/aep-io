@@ -39,6 +39,11 @@ public class ApplicationInit implements ApplicationRunner {
 //    private RedissonClient redissonClient;
 
 
+    /**
+     * 处理指令下发命令队列
+     * @param args
+     * @throws Exception
+     */
     @Override
     public void run(ApplicationArguments args) throws Exception {
 
