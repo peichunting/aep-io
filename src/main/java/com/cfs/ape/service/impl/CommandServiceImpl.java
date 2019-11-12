@@ -1,6 +1,8 @@
 package com.cfs.ape.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.cfs.ape.entity.AepCommand;
+import com.cfs.ape.enums.CommandStatusEnum;
 import com.cfs.ape.mapper.CommandMapper;
 import com.cfs.ape.service.CommandService;
 import com.ctg.ag.sdk.biz.AepCommandClient;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import javax.activation.CommandMap;
 import javax.annotation.Resource;
+import java.util.List;
 
 @Service
 public class CommandServiceImpl implements CommandService {
@@ -42,5 +45,13 @@ public class CommandServiceImpl implements CommandService {
     public AepCommand updateCommand(AepCommand command) {
         commandMapper.updateById(command);
         return command;
+    }
+
+    @Override
+    public List<AepCommand> listPreparedOrRetryCommand() {
+        QueryWrapper<AepCommand> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("command_status", CommandStatusEnum.PREPARED).or().eq("command_status",CommandStatusEnum.RETRAY);
+        List<AepCommand> list = commandMapper.selectList(queryWrapper);
+        return list;
     }
 }

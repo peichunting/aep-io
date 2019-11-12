@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 import static com.baomidou.mybatisplus.annotation.IdType.ID_WORKER;
 
-@TableName("cfs_command_info")
+@TableName("cfs_aep_command_info")
 public class AepCommandInfo {
 
     @TableId(type= ID_WORKER)

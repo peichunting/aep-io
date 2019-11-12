@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.cfs.ape.entity.AepCommand;
 import com.cfs.ape.enums.CommandStatusEnum;
+import com.cfs.ape.service.CommandService;
 import com.cfs.ape.service.support.AepCommandSupport;
 import com.cfs.ape.util.MyComparator;
 import com.cfs.ape.util.RedissonUtil;
@@ -21,6 +22,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
 import java.util.Comparator;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.PriorityBlockingQueue;
@@ -39,18 +41,32 @@ public class ApplicationInit implements ApplicationRunner {
     private AepCommandSupport aepCommandSupport;
 
     @Autowired
-    private RedissonClient redissonClient;
+    private CommandService commandService;
+
+//    @Autowired
+//    private RedissonClient redissonClient;
 
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
+
+        List<AepCommand> list = commandService.listPreparedOrRetryCommand();
+        list.forEach(command ->{
+            RedissonClient redissonClient = Redisson.create(config);
+            RPriorityQueue<String> priorityQueue = redissonClient.getPriorityQueue(ApplicationConstant.COMMAND_PREPARE_HANDLE_QUEUE);
+            priorityQueue.trySetComparator(new MyComparator());
+            priorityQueue.add(JSON.toJSONString(command));
+        });
+
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.submit(new Runnable() {
             @Override
             public void run() {
 
                 while (ApplicationConstant.CONSUMME) {
+                    RedissonClient redissonClient = Redisson.create(config);
                     RPriorityBlockingQueue<String> priorityQueue = redissonClient.getPriorityBlockingQueue(ApplicationConstant.COMMAND_PREPARE_HANDLE_QUEUE);
+
                     priorityQueue.trySetComparator(new MyComparator());
                     try {
 
