@@ -3,7 +3,9 @@ package com.cfs.ape.config;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.cfs.ape.entity.AepCommand;
+import com.cfs.ape.enums.CommandStatusEnum;
 import com.cfs.ape.service.support.AepCommandSupport;
+import com.cfs.ape.util.MyComparator;
 import com.cfs.ape.util.RedissonUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.redisson.Redisson;
@@ -48,30 +50,25 @@ public class ApplicationInit implements ApplicationRunner {
             public void run() {
 
                 while (ApplicationConstant.CONSUMME) {
-                    //RedissonClient client = Redisson.create(config);
                     RPriorityBlockingQueue<String> priorityQueue = redissonClient.getPriorityBlockingQueue(ApplicationConstant.COMMAND_PREPARE_HANDLE_QUEUE);
-//                    priorityQueue.trySetComparator(new Comparator<String>() {
-//                        @Override
-//                        public int compare(String o1, String o2) {
-//                            return o1.compareTo(o2);
-//                        }
-//                    });
-                    //priorityQueue.addListener()
-                    //priorityQueue.touchAsync()
-                    //priorityQueue.moveAsync(0);
+                    priorityQueue.trySetComparator(new MyComparator());
                     try {
 
-                        //if(!priorityQueue.isEmpty()) {
                             String command = priorityQueue.take();
 
                             if (StringUtils.isBlank(command)) {
                                 continue;
                             }
 
-
                             JSONObject commandJson = JSON.parseObject(command);
                             AepCommand aepCommand = JSON.toJavaObject(commandJson, AepCommand.class);
-                            aepCommandSupport.mockDeviceCommandCreate(aepCommand);
+
+                            aepCommand = aepCommandSupport.mockDeviceCommandCreate(aepCommand);
+                            if(CommandStatusEnum.RETRAY.equals(aepCommand.getCommandStatus())){
+                                if (ApplicationConstant.AEP_MAX_RETRY_TIMES >= aepCommand.getRetryTimes()){
+                                    priorityQueue.add(JSON.toJSONString(aepCommand));
+                                }
+                            }
                         //}
                     } catch (Exception e) {
                         e.printStackTrace();

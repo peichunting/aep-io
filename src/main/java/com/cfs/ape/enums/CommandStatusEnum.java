@@ -2,5 +2,5 @@ package com.cfs.ape.enums;
 
 public enum CommandStatusEnum {
 
-    PREPARED,PROCESSING,SUCCESS,FAILURE
+    PREPARED,PROCESSING,SUCCESS,FAILURE,RETRAY
 }

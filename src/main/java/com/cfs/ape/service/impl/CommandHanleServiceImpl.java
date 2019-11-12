@@ -21,7 +21,9 @@ public class CommandHanleServiceImpl implements CommandHandleService {
 
     @Override
     public AepCommand handleCommand(AepCommand aepCommand) {
+
         aepCommand.setCommandStatus(CommandStatusEnum.PREPARED);
+
         aepCommand = commandService.saveCommand(aepCommand);
         String commandStr = JSON.toJSONString(aepCommand);
         redissonUtil.pushToPriorityQueue(ApplicationConstant.COMMAND_PREPARE_HANDLE_QUEUE,commandStr);

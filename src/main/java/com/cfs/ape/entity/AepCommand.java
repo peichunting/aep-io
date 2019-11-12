@@ -43,6 +43,24 @@ public class AepCommand {
 
     private int priority;
 
+    private int commandType;
+
+    //重试次数
+    private int retryTimes;
+
+    //业务流水号
+    private int bussinessId;
+
+    private String imei;
+
+    //模块品牌
+    private int model;
+
+    //设备类型
+    private int deviceType;
+
+    private String args;
+
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
@@ -185,5 +203,61 @@ public class AepCommand {
 
     public void setPriority(int priority) {
         this.priority = priority;
+    }
+
+    public int getCommandType() {
+        return commandType;
+    }
+
+    public void setCommandType(int commandType) {
+        this.commandType = commandType;
+    }
+
+    public int getRetryTimes() {
+        return retryTimes;
+    }
+
+    public void setRetryTimes(int retryTimes) {
+        this.retryTimes = retryTimes;
+    }
+
+    public int getBussinessId() {
+        return bussinessId;
+    }
+
+    public void setBussinessId(int bussinessId) {
+        this.bussinessId = bussinessId;
+    }
+
+    public String getImei() {
+        return imei;
+    }
+
+    public void setImei(String imei) {
+        this.imei = imei;
+    }
+
+    public int getModel() {
+        return model;
+    }
+
+    public void setModel(int model) {
+        this.model = model;
+    }
+
+    public int getDeviceType() {
+        return deviceType;
+    }
+
+    public void setDeviceType(int deviceType) {
+        this.deviceType = deviceType;
+    }
+
+    public String getArgs() {
+        return args;
+    }
+
+    public void setArgs(String args) {
+        this.args = args;
     }
 }
