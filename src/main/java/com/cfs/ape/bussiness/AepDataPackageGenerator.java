@@ -43,6 +43,7 @@ public class AepDataPackageGenerator implements DataPackageGenerator {
         deviceId = StringUtils.isBlank(deviceId) ? "" : deviceId;
         keyBuilder.append(":").append(deviceId);
 
+        //设置业务流水号字节
         try {
             long bussinessId = redissonUtil.getAtomicLong(keyBuilder.toString());
             long lowerByte = bussinessId & 0xff;
@@ -66,8 +67,11 @@ public class AepDataPackageGenerator implements DataPackageGenerator {
             lastNineChar = "0";
         }
 
+        //设置版本号字节
         instruction[4] = (byte)mainVersion;
         instruction[5] = (byte)customerVersion;
+
+        //设置信息体字节
         String argsStr = aepCommand.getArgs();
         int[] argsInt = null;
         if(StringUtils.isNotBlank(argsStr)){
@@ -77,10 +81,15 @@ public class AepDataPackageGenerator implements DataPackageGenerator {
                 for (int i = 0 ;i < args.length ; i++) {
                     argsInt[i] = Integer.valueOf(args[i]);
                 }
-                getInfoBytes(aepCommand.getCommandType(),instruction,argsInt);
+
+
             }
         }
-        getInfoBytes(aepCommand.getCommandType(),instruction,argsInt);
+        if(getInfoBytes(aepCommand.getCommandType(),instruction,argsInt) == null){
+            return null;
+        }
+
+        //设置源地址字节
         int imeiInt = Integer.valueOf(lastNineChar);
         instruction[12] = (byte)(imeiInt & 0xff);
         instruction[13] = (byte)((imeiInt >> 8) & 0xff);
@@ -89,8 +98,15 @@ public class AepDataPackageGenerator implements DataPackageGenerator {
         instruction[16] = (byte)(aepCommand.getDeviceType());
         instruction[17] = (byte)(aepCommand.getModel());
 
+        //设置命令字节
         instruction[18] = (byte)(aepCommand.getCommandType());
-
+        //计算校验和
+        int sum = 0;
+        for(int i = 2; i < 19;i++){
+            sum += (int)instruction[i];
+        }
+        sum = sum & 0xff;
+        instruction[19] = (byte)sum;
         instruction[20] = END_CHAR;
         instruction[21] = END_CHAR;
         return instruction;
