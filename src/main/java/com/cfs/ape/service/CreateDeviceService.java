@@ -1,6 +1,5 @@
 package com.cfs.ape.service;
 
-import com.cfs.ape.entity.AepCommand;
 import com.cfs.ape.entity.AepCreateDevice;
 
 public interface CreateDeviceService {

@@ -1,7 +1,6 @@
 package com.cfs.ape.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.cfs.ape.entity.AepCommand;
 import com.cfs.ape.entity.AepCommandInfo;
 import com.cfs.ape.mapper.CommandInfoMapper;
 import com.cfs.ape.service.CommandInfoService;

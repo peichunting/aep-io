@@ -7,7 +7,6 @@ import com.cfs.ape.enums.CommandStatusEnum;
 import com.cfs.ape.service.CommandService;
 import com.cfs.ape.service.support.AepCommandSupport;
 import com.cfs.ape.util.MyComparator;
-import com.cfs.ape.util.RedissonUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.redisson.Redisson;
 import org.redisson.api.RPriorityBlockingQueue;

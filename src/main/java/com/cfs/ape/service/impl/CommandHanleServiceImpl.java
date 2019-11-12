@@ -14,9 +14,7 @@ import com.cfs.ape.util.RedissonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.activation.CommandInfo;
 import java.math.BigInteger;
-import java.util.concurrent.ExecutorService;
 
 @Service
 public class CommandHanleServiceImpl implements CommandHandleService {
