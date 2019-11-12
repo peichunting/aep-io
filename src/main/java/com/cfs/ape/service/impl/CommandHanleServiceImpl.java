@@ -5,13 +5,16 @@ import com.alibaba.fastjson.JSONObject;
 import com.cfs.ape.bussiness.DataPackageGenerator;
 import com.cfs.ape.config.ApplicationConstant;
 import com.cfs.ape.entity.AepCommand;
+import com.cfs.ape.entity.AepCommandInfo;
 import com.cfs.ape.enums.CommandStatusEnum;
 import com.cfs.ape.service.CommandHandleService;
+import com.cfs.ape.service.CommandInfoService;
 import com.cfs.ape.service.CommandService;
 import com.cfs.ape.util.RedissonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.activation.CommandInfo;
 import java.math.BigInteger;
 import java.util.concurrent.ExecutorService;
 
@@ -26,6 +29,9 @@ public class CommandHanleServiceImpl implements CommandHandleService {
 
     @Autowired
     private DataPackageGenerator dataPackageGenerator;
+
+    @Autowired
+    private CommandInfoService commandInfoService;
 
 
     @Override
@@ -43,6 +49,8 @@ public class CommandHanleServiceImpl implements CommandHandleService {
         contentJson.put("isReturn",1);
         String content = contentJson.toJSONString();
         aepCommand.setContent(content);
+        AepCommandInfo commandInfo = commandInfoService.getCommandInfoByCommandType(aepCommand.getCommandType());
+        aepCommand.setPriority(commandInfo.getPriority());
         aepCommand = commandService.saveCommand(aepCommand);
         String commandStr = JSON.toJSONString(aepCommand);
         redissonUtil.pushToPriorityQueue(ApplicationConstant.COMMAND_PREPARE_HANDLE_QUEUE,commandStr);
