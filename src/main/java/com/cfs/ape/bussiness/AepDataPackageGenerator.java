@@ -32,7 +32,7 @@ public class AepDataPackageGenerator implements DataPackageGenerator {
 
         instruction[0] = START_CHAR;
         instruction[1] = START_CHAR;
-        StringBuilder keyBuilder = new StringBuilder();
+        StringBuilder keyBuilder = new StringBuilder("bussniessid:");
         String productId = aepCommand.getProductId();
         productId = StringUtils.isBlank(productId) ? "" : productId;
         keyBuilder.append(productId);

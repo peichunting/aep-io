@@ -44,9 +44,9 @@ public class CommandHanleServiceImpl implements CommandHandleService {
         }
         String hex = new BigInteger(1, instruction).toString(16);
         JSONObject contentJson = new JSONObject();
-        contentJson.put("payload",hex);
-        contentJson.put("dataType",1);
-        contentJson.put("isReturn",1);
+        contentJson.put("payload","0x" + hex);
+        contentJson.put("dataType",2);
+        //contentJson.put("isReturn",1);
         String content = contentJson.toJSONString();
         aepCommand.setContent(content);
         AepCommandInfo commandInfo = commandInfoService.getCommandInfoByCommandType(aepCommand.getCommandType());

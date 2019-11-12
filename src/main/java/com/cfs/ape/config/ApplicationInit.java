@@ -10,7 +10,6 @@ import com.cfs.ape.util.MyComparator;
 import com.cfs.ape.util.RedissonUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.redisson.Redisson;
-import org.redisson.api.ObjectListener;
 import org.redisson.api.RPriorityBlockingQueue;
 import org.redisson.api.RPriorityQueue;
 import org.redisson.api.RedissonClient;
@@ -19,20 +18,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.core.StringRedisTemplate;
-
-import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.PriorityBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
 
 @Configuration
 public class ApplicationInit implements ApplicationRunner {
 
-    @Autowired
-    private RedissonUtil redissonUtil;
 
     @Autowired
     private Config config;
@@ -58,7 +50,7 @@ public class ApplicationInit implements ApplicationRunner {
             priorityQueue.add(JSON.toJSONString(command));
         });
 
-        ExecutorService executor = Executors.newSingleThreadExecutor();
+        ExecutorService executor = Executors.newFixedThreadPool(4);//newSingledThreadExecutor();
         executor.submit(new Runnable() {
             @Override
             public void run() {
@@ -79,7 +71,7 @@ public class ApplicationInit implements ApplicationRunner {
                             JSONObject commandJson = JSON.parseObject(command);
                             AepCommand aepCommand = JSON.toJavaObject(commandJson, AepCommand.class);
 
-                            aepCommand = aepCommandSupport.mockDeviceCommandCreate(aepCommand);
+                            aepCommand = aepCommandSupport.deviceCommandCreate(aepCommand);
                             if(CommandStatusEnum.RETRAY.equals(aepCommand.getCommandStatus())){
                                 if (ApplicationConstant.AEP_MAX_RETRY_TIMES >= aepCommand.getRetryTimes()){
                                     priorityQueue.add(JSON.toJSONString(aepCommand));

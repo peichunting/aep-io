@@ -43,7 +43,7 @@ public class RedissonUtil {
         RedissonClient redissonClient = Redisson.create(config);
         Long result = null;
         try {
-            RAtomicLong atomicLong = redissonClient.getAtomicLong("key");
+            RAtomicLong atomicLong = redissonClient.getAtomicLong(key);
             result = atomicLong.getAndIncrement();
             if(result.compareTo(MAX_ID) >= 0){
                 result = 0L;

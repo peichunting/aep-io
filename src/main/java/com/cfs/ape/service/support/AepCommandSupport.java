@@ -9,7 +9,9 @@ import com.cfs.ape.service.CommandService;
 import com.ctg.ag.sdk.biz.AepDeviceCommandClient;
 import com.ctg.ag.sdk.biz.aep_device_command.CreateCommandRequest;
 import com.ctg.ag.sdk.biz.aep_device_command.CreateCommandResponse;
+import com.ctg.ag.sdk.core.http.RequestFormat;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.entity.ContentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +28,7 @@ public class AepCommandSupport {
     @Value("${aep.app.key}")
     private String appKey;
 
-    @Value("${aep.app.secret")
+    @Value("${aep.app.secret}")
     private String appSecret;
 
     @Autowired
@@ -61,15 +63,17 @@ public class AepCommandSupport {
             JSONObject requestJson = new JSONObject();
             requestJson.put("deviceId",aepCommand.getDeviceId());
             requestJson.put("operator",aepCommand.getOperator());
-            requestJson.put("productId",aepCommand.getProductId());
-            requestJson.put("ttl",aepCommand.getTtl());
-            requestJson.put("deviceGroupId",aepCommand.getDeviceGroupId());
-            requestJson.put("level",aepCommand.getLevel());
+            requestJson.put("productId",Integer.valueOf(aepCommand.getProductId()));
+            requestJson.put("ttl",0);
+            requestJson.put("deviceGroupId",null);
+            requestJson.put("level",1);
             String requestContent = aepCommand.getContent();
 
             requestJson.put("content",JSON.parseObject(requestContent));
+            request.setMethod(RequestFormat.POST().contentType(ContentType.APPLICATION_JSON));
+            request.setBody(requestJson.toJSONString().getBytes("utf-8"));
 
-            request.setBody(requestJson.toJSONString().getBytes());
+            //String value = new String(requestJson.toJSONString().getBytes("utf-8"));
             CreateCommandResponse response = client.CreateCommand(request);
             int code = response.getStatusCode();
 
@@ -105,6 +109,7 @@ public class AepCommandSupport {
             }else{
                 aepCommand.setCommandStatus(CommandStatusEnum.FAILURE);
             }
+            e.printStackTrace();
             //aepCommand.setCommandStatus(CommandStatusEnum.FAILURE);
         }
         return commandService.updateCommand(aepCommand);
