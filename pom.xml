@@ -24,7 +24,7 @@
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <spring.boot.version>2.0.6.RELEASE</spring.boot.version>
+        <spring.boot.version>2.5.12</spring.boot.version>
         <fastjson.version>1.2.51</fastjson.version>
         <commons.lang3.version>3.6</commons.lang3.version>
         <apache.httpclient.version>4.5.3</apache.httpclient.version>
